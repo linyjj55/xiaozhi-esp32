@@ -127,5 +127,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: xiaozhi_${{ matrix.full_name }}_${{ github.sha }}
-          path: build/merged-binary.bin
-          if-no-files-found: error
+          path: |
+            build/merged-binary.bin
+            build/generated_assets.bin
+          if-no-files-found: warn
