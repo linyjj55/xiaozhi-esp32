@@ -164,6 +164,9 @@ void OledDisplay::SetChatMessage(const char* role, const char* content) {
     }
 
     lv_label_set_text(chat_message_label_, display_text.c_str());
+
+    // Scroll to bottom to show latest text
+    lv_obj_scroll_to_y(content_, lv_obj_get_scroll_bottom(content_), LV_ANIM_ON);
 }
 
 void OledDisplay::SetupUI_128x64() {
@@ -240,7 +243,7 @@ void OledDisplay::SetupUI_128x64() {
     lv_label_set_text(battery_label_, "");
     lv_obj_set_style_text_font(battery_label_, icon_font, 0);
 
-    /* Chat message area - full width, multiline */
+    /* Chat message area - full width, scrollable vertically */
     content_ = lv_obj_create(container_);
     lv_obj_set_scrollbar_mode(content_, LV_SCROLLBAR_MODE_OFF);
     lv_obj_set_style_radius(content_, 0, 0);
@@ -248,6 +251,8 @@ void OledDisplay::SetupUI_128x64() {
     lv_obj_set_style_border_width(content_, 0, 0);
     lv_obj_set_width(content_, LV_HOR_RES - 4);
     lv_obj_set_flex_grow(content_, 1);
+    lv_obj_set_scroll_dir(content_, LV_DIR_VER);
+    lv_obj_set_scroll_snap_y(content_, LV_SCROLL_SNAP_NONE);
 
     // Small emotion icon top-right corner
     emotion_label_ = lv_label_create(content_);
@@ -255,11 +260,12 @@ void OledDisplay::SetupUI_128x64() {
     lv_label_set_text(emotion_label_, FONT_AWESOME_MICROCHIP_AI);
     lv_obj_align(emotion_label_, LV_ALIGN_TOP_RIGHT, 0, 0);
 
-    // Chat message - multiline word wrap, full width
+    // Chat message - multiline word wrap, expands freely
     chat_message_label_ = lv_label_create(content_);
-    lv_obj_set_width(chat_message_label_, LV_HOR_RES - 12);
+    lv_obj_set_width(chat_message_label_, LV_HOR_RES - 14);
     lv_label_set_long_mode(chat_message_label_, LV_LABEL_LONG_WRAP);
     lv_obj_set_style_text_align(chat_message_label_, LV_TEXT_ALIGN_LEFT, 0);
+    lv_obj_set_height(chat_message_label_, LV_SIZE_CONTENT);
     lv_label_set_text(chat_message_label_, "");
 
     // Low battery popup
